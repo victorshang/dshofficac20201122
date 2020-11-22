@@ -1,0 +1,24 @@
+{
+    "name": "DSHOfficAC20201122",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*",
+        "ESP01 & www.Bigiot.com IOT": "github:victorshang/pxt-makecode-esp01_bigiot#v3.0.5",
+        "makecode bit_oper": "github:victorshang/pxt-makecode-bit_oper#8fb0811c86b4a7ef5423f90849a2d89b212d8a5b",
+        "i2cLCD1602": "github:makecode-extensions/i2clcd1602#v1.5.0"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
+}
