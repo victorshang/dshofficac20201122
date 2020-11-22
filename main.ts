@@ -7,6 +7,8 @@ function ErrorHandle (isOK: boolean, OutputErrorInfo: string) {
     }
 }
 input.onButtonPressed(Button.A, function () {
+    meidea_ir.initIR(AnalogPin.P8)
+    basic.pause(500)
     meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Wind, tmp_code.T25, wind_code.Auto))
 })
 function Login () {
@@ -72,9 +74,10 @@ function initOther () {
         . . . . .
         `)
     basic.pause(500)
-    meidea_ir.initIR(AnalogPin.P8)
 }
 input.onButtonPressed(Button.B, function () {
+    meidea_ir.initIR(AnalogPin.P8)
+    basic.pause(500)
     meidea_ir.sendCode(meidea_ir.getCloseCode())
 })
 function ShowText1602 (text: string) {
@@ -128,29 +131,39 @@ basic.forever(function () {
         ShowText1602(命令)
         if (命令 == "onHotAC") {
             music.playTone(523, music.beat(BeatFraction.Sixteenth))
+            basic.pause(500)
+            meidea_ir.initIR(AnalogPin.P8)
+            basic.pause(500)
             for (let index = 0; index < 3; index++) {
                 meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Heat, tmp_code.T22, wind_code.Mid))
-                basic.pause(5000)
+                basic.pause(1000)
             }
         }
         if (命令 == "onColdAC") {
             music.playTone(523, music.beat(BeatFraction.Sixteenth))
+            basic.pause(500)
+            meidea_ir.initIR(AnalogPin.P8)
+            basic.pause(500)
             for (let index = 0; index < 3; index++) {
                 meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Cold, tmp_code.T25, wind_code.Mid))
-                basic.pause(5000)
+                basic.pause(1000)
             }
         }
         if (命令 == "offAC") {
             music.playTone(523, music.beat(BeatFraction.Sixteenth))
+            basic.pause(500)
+            meidea_ir.initIR(AnalogPin.P8)
+            basic.pause(500)
             for (let index = 0; index < 3; index++) {
                 meidea_ir.sendCode(meidea_ir.getCloseCode())
-                basic.pause(5000)
+                basic.pause(1000)
             }
         }
         if (命令 == "playMusic") {
-            music.playMelody("G F G A - F E D ", 128)
+            music.playMelody("E B C5 A B G A F ", 340)
         }
         if (命令 == "reset") {
+            music.playTone(196, music.beat(BeatFraction.Sixteenth))
             control.reset()
         }
         if (命令 == "ERROR") {
