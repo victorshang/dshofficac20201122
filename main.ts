@@ -1,3 +1,8 @@
+function playSound (value: number) {
+    if (!(Silence)) {
+        music.playTone(value, music.beat(BeatFraction.Sixteenth))
+    }
+}
 function ErrorHandle (isOK: boolean, OutputErrorInfo: string) {
     if (!(isOK)) {
         I2C_LCD1602.ShowString(OutputErrorInfo, 0, 0)
@@ -11,12 +16,23 @@ input.onButtonPressed(Button.A, function () {
     basic.pause(500)
     meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Wind, tmp_code.T25, wind_code.Auto))
 })
+function turnSilence () {
+    Silence = !(Silence)
+    if (Silence) {
+        I2C_LCD1602.BacklightOff()
+    } else {
+        I2C_LCD1602.BacklightOn()
+    }
+}
+input.onButtonPressed(Button.AB, function () {
+    turnSilence()
+})
 function Login () {
     ESP8266.connectWifi(
     SerialPin.P2,
     SerialPin.P1,
     BaudRate.BaudRate115200,
-    "Redmi_Mini",
+    "TP-LINK_Mini",
     "0987654323"
     )
     basic.showString("W")
@@ -31,6 +47,12 @@ function Login () {
     basic.showString("I")
     ErrorHandle(Bigiot_net.isLastCmdSuccessful(), "Login Err")
     lasttime = 0
+}
+function showHeart () {
+    if (!(Silence)) {
+        basic.showIcon(IconNames.Heart)
+        basic.clearScreen()
+    }
 }
 function initLCD1602 () {
     I2C_LCD1602.LcdInit(39)
@@ -48,14 +70,6 @@ function initLCD1602 () {
     }
     I2C_LCD1602.clear()
 }
-input.onButtonPressed(Button.AB, function () {
-    Silence = !(Silence)
-    if (Silence) {
-        I2C_LCD1602.BacklightOff()
-    } else {
-        I2C_LCD1602.BacklightOn()
-    }
-})
 function initVar () {
     Silence = false
     Device_ID = "12386"
@@ -80,6 +94,12 @@ input.onButtonPressed(Button.B, function () {
     basic.pause(500)
     meidea_ir.sendCode(meidea_ir.getCloseCode())
 })
+function showDiamond () {
+    if (!(Silence)) {
+        basic.showIcon(IconNames.Square)
+        basic.clearScreen()
+    }
+}
 function ShowText1602 (text: string) {
     I2C_LCD1602.clear()
     local_len = text.length
@@ -95,10 +115,10 @@ let local_len = 0
 let beat = 0
 let sleeptime = 0
 let Temper_ID = ""
-let Silence = false
 let lasttime = 0
 let APIKEY = ""
 let Device_ID = ""
+let Silence = false
 initVar()
 initOther()
 initLCD1602()
@@ -106,12 +126,9 @@ Login()
 basic.forever(function () {
     if (control.millis() - lasttime > sleeptime) {
         Bigiot_net.sendBigiotBeat()
+        showHeart()
         beat += 1
         lasttime = control.millis()
-        if (!(Silence)) {
-            basic.showIcon(IconNames.Heart)
-            basic.clearScreen()
-        }
     }
     if (beat >= 6) {
         ShowText1602("Temp:" + convertToText(input.temperature()))
@@ -120,54 +137,55 @@ basic.forever(function () {
         Temper_ID,
         convertToText(input.temperature())
         )
+        showDiamond()
         beat = 0
-        if (!(Silence)) {
-            basic.showIcon(IconNames.Diamond)
-            basic.clearScreen()
-        }
     }
     if (Bigiot_net.getCommand(500)) {
         命令 = Bigiot_net.lastCmd()
         ShowText1602(命令)
         if (命令 == "onHotAC") {
-            music.playTone(523, music.beat(BeatFraction.Sixteenth))
+            playSound(523)
             basic.pause(500)
             meidea_ir.initIR(AnalogPin.P8)
             basic.pause(500)
             for (let index = 0; index < 3; index++) {
                 meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Heat, tmp_code.T22, wind_code.Mid))
-                basic.pause(1000)
+                basic.pause(2000)
             }
         }
         if (命令 == "onColdAC") {
-            music.playTone(523, music.beat(BeatFraction.Sixteenth))
+            playSound(523)
             basic.pause(500)
             meidea_ir.initIR(AnalogPin.P8)
             basic.pause(500)
             for (let index = 0; index < 3; index++) {
                 meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Cold, tmp_code.T25, wind_code.Mid))
-                basic.pause(1000)
+                basic.pause(2000)
             }
         }
         if (命令 == "offAC") {
-            music.playTone(523, music.beat(BeatFraction.Sixteenth))
+            playSound(523)
             basic.pause(500)
             meidea_ir.initIR(AnalogPin.P8)
             basic.pause(500)
             for (let index = 0; index < 3; index++) {
                 meidea_ir.sendCode(meidea_ir.getCloseCode())
-                basic.pause(1000)
+                basic.pause(2000)
             }
+        }
+        if (命令 == "turnSilence") {
+            playSound(196)
+            turnSilence()
         }
         if (命令 == "playMusic") {
             music.playMelody("E B C5 A B G A F ", 340)
         }
         if (命令 == "reset") {
-            music.playTone(196, music.beat(BeatFraction.Sixteenth))
+            playSound(196)
             control.reset()
         }
         if (命令 == "ERROR") {
-            music.playTone(196, music.beat(BeatFraction.Sixteenth))
+            playSound(196)
             control.reset()
         }
     }
