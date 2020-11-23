@@ -12,9 +12,9 @@ function ErrorHandle (isOK: boolean, OutputErrorInfo: string) {
     }
 }
 input.onButtonPressed(Button.A, function () {
-    meidea_ir.initIR(AnalogPin.P8)
+    meideaAC_ir.initIR(AnalogPin.P8)
     basic.pause(500)
-    meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Wind, tmp_code.T25, wind_code.Auto))
+    meideaAC_ir.sendCode(meideaAC_ir.getOpenCode(mode_code.Wind, tmp_code.T25, wind_code.Auto))
 })
 function turnSilence () {
     Silence = !(Silence)
@@ -90,9 +90,9 @@ function initOther () {
     basic.pause(500)
 }
 input.onButtonPressed(Button.B, function () {
-    meidea_ir.initIR(AnalogPin.P8)
+    meideaAC_ir.initIR(AnalogPin.P8)
     basic.pause(500)
-    meidea_ir.sendCode(meidea_ir.getCloseCode())
+    meideaAC_ir.sendCode(meideaAC_ir.getCloseCode())
 })
 function showDiamond () {
     if (!(Silence)) {
@@ -146,47 +146,61 @@ basic.forever(function () {
         if (命令 == "onHotAC") {
             playSound(523)
             basic.pause(500)
-            meidea_ir.initIR(AnalogPin.P8)
+            meideaAC_ir.initIR(AnalogPin.P8)
             basic.pause(500)
             for (let index = 0; index < 3; index++) {
-                meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Heat, tmp_code.T22, wind_code.Mid))
+                meideaAC_ir.sendCode(meideaAC_ir.getOpenCode(mode_code.Heat, tmp_code.T22, wind_code.Mid))
                 basic.pause(2000)
             }
         }
         if (命令 == "onColdAC") {
             playSound(523)
             basic.pause(500)
-            meidea_ir.initIR(AnalogPin.P8)
+            meideaAC_ir.initIR(AnalogPin.P8)
             basic.pause(500)
             for (let index = 0; index < 3; index++) {
-                meidea_ir.sendCode(meidea_ir.getOpenCode(mode_code.Cold, tmp_code.T25, wind_code.Mid))
+                meideaAC_ir.sendCode(meideaAC_ir.getOpenCode(mode_code.Cold, tmp_code.T25, wind_code.Mid))
                 basic.pause(2000)
             }
         }
-        if (命令 == "offAC") {
-            playSound(523)
-            basic.pause(500)
-            meidea_ir.initIR(AnalogPin.P8)
-            basic.pause(500)
-            for (let index = 0; index < 3; index++) {
-                meidea_ir.sendCode(meidea_ir.getCloseCode())
-                basic.pause(2000)
-            }
+    }
+    if (命令 == "offAC") {
+        playSound(523)
+        basic.pause(500)
+        meideaAC_ir.initIR(AnalogPin.P8)
+        basic.pause(500)
+        for (let index = 0; index < 3; index++) {
+            meideaAC_ir.sendCode(meideaAC_ir.getCloseCode())
+            basic.pause(2000)
         }
-        if (命令 == "turnSilence") {
-            playSound(196)
-            turnSilence()
-        }
-        if (命令 == "playMusic") {
-            music.playMelody("E B C5 A B G A F ", 340)
-        }
-        if (命令 == "reset") {
-            playSound(196)
-            control.reset()
-        }
-        if (命令 == "ERROR") {
-            playSound(196)
-            control.reset()
-        }
+    }
+    if (命令 == "shakeHead") {
+        playSound(523)
+        basic.pause(500)
+        meideaFan_ir.initIR(AnalogPin.P8)
+        basic.pause(500)
+        meideaFan_ir.sendCode(meideaFan_ir.getFanMode(fanCode_code.fan_ShakeHead))
+    }
+    if (命令 == "onOffFan") {
+        playSound(523)
+        basic.pause(500)
+        meideaFan_ir.initIR(AnalogPin.P8)
+        basic.pause(500)
+        meideaFan_ir.sendCode(meideaFan_ir.getFanMode(fanCode_code.fan_OpenClose))
+    }
+    if (命令 == "turnSilence") {
+        playSound(196)
+        turnSilence()
+    }
+    if (命令 == "playMusic") {
+        music.playMelody("E B C5 A B G A F ", 340)
+    }
+    if (命令 == "reset") {
+        playSound(196)
+        control.reset()
+    }
+    if (命令 == "ERROR") {
+        playSound(196)
+        control.reset()
     }
 })
