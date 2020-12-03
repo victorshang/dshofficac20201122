@@ -1,5 +1,5 @@
 {
-    "name": "DSHOfficAC20201124",
+    "name": "DSHOfficAC20201203",
     "version": "1.0.1",
     "description": "",
     "dependencies": {
@@ -7,7 +7,7 @@
         "radio": "*",
         "microphone": "*",
         "ESP01 & www.Bigiot.com IOT": "github:victorshang/pxt-makecode-esp01_bigiot#v3.0.5",
-        "makecode bit_oper": "github:victorshang/pxt-makecode-bit_oper#v1.0.4",
+        "makecode bit_oper": "github:victorshang/pxt-makecode-bit_oper#v1.0.7",
         "i2cLCD1602": "github:makecode-extensions/i2clcd1602#v1.5.0"
     },
     "files": [
